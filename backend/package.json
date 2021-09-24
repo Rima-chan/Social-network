@@ -1,0 +1,26 @@
+{
+  "name": "social-network-backend",
+  "version": "1.0.0",
+  "description": "HTTP Server for API Rest - Social network",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Rima-chan/Social-network.git"
+  },
+  "keywords": [
+    "http",
+    "api",
+    "server",
+    "express"
+  ],
+  "author": "Marie Beaujeu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Rima-chan/Social-network/issues"
+  },
+  "homepage": "https://github.com/Rima-chan/Social-network#readme"
+}
