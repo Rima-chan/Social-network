@@ -3,6 +3,8 @@ const express = require('express');
 const cors = require('cors');
 const mysql = require('mysql');
 
+const userRoutes = require('./routes/user');
+
 const app = express();
 
 app.use(cors());
@@ -19,8 +21,6 @@ db.connect((err) => {
     console.log('Connected to MySQL Database');
 })
 
-app.use((req, res) => {
-    res.json({message: 'OK'})
-})
+app.use('/api', userRoutes);
 
 module.exports = app;
