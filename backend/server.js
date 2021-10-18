@@ -1,11 +1,23 @@
 require('dotenv').config();
-const http = require('http');;
-const app = require('./app');
+const express = require('express');
+const cors = require('cors');
+const app = express();
+const bodyParser = require('body-parser');
+const userRoutes = require('./routes/user');
+const publicationRoutes = require('./routes/publication');
+const commentRoutes =require('./routes/comment');
+const path = require('path');
 
-const server = http.createServer(app);
+app.use(cors());
+app.use(bodyParser.urlencoded());
+
+app.use('/images', express.static(path.join(__dirname, 'images')));
+app.use('/api', userRoutes);
+app.use('/api', publicationRoutes);
+app.use('/api/publications', commentRoutes);
 
 const port = process.env.DB_PORT || 3000;
 
-server.listen(port, () => {
-    console.log(`Listenong on port : ${port}`)
+app.listen(port, () => {
+    console.log(`Listening on port : ${port}`)
 })   
