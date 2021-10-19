@@ -42,13 +42,26 @@ Publication.update = (updatedPublication) => {
     })
 }
 
-Publication.addComment = (nb) => {
-    let sql ='UPDATE publications SET comments = ?';
-    sql = mysql.format(sql, nb);
+Publication.updateComment = (nbAndId) => {
+    let sql ='UPDATE publications SET comments = ? WHERE id = ?';
+    sql = mysql.format(sql, nbAndId);
     return new Promise((resolve, reject) => {
         db.query(sql, function(err, result) {
             if (err) reject({error: 'Cannot update nb of comments' + err});
             resolve(result);
+
+        })
+    })
+}
+
+Publication.updateLike = (nbAndId) => {
+    let sql = 'UPDATE publications SET likes = ? WHERE id = ?';
+    sql = mysql.format(sql, nbAndId);
+    return new Promise((resolve, reject) => {
+        db.query(sql, function(err, result) {
+            if (err) reject({error: 'Cannot update nb of likes' + err});
+            resolve(result);
+
         })
     })
 }

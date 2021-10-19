@@ -41,9 +41,9 @@ Comment.findById = (commentId) => {
     })
 }
 
-Comment.deleteComment = (commentId) => {
-    let sql = 'DELETE FROM comments WHERE id = ?';
-    sqp = mysql.format(sql, commentId);
+Comment.delete = (commentId) => {
+    let sql = 'DELETE FROM `comments` WHERE `id` = ?';
+    sql = mysql.format(sql, commentId);
     return new Promise((resolve, reject) => {
         db.query(sql, function(err, result) {
             if (err) reject({error: err});

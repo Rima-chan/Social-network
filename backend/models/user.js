@@ -20,8 +20,8 @@ User.create = (newUser) => {
     })
 }
 
-User.findByEmail = (attributes, email) => {
-    let sql = `SELECT ${attributes} FROM users WHERE email = ?`;
+User.findByEmail = (email) => {
+    let sql = `SELECT email FROM users WHERE email = ?`;
     sql = mysql.format(sql, email);
     return new Promise((resolve, reject) => {
         db.query(sql, function(err, result) {
@@ -42,12 +42,12 @@ User.findByPseudo = (pseudo) => {
     })
 }
 
-User.findById = (attributes, id) => {
-    let sql = `SELECT ${attributes} FROM users WHERE id = ?`;
+User.findById = (id) => {
+    let sql = `SELECT id, email, username, avatar, isAdmin FROM users WHERE id = ?`;
     sql = mysql.format(sql, id);
     return new Promise((resolve, reject) => {
         db.query(sql, function(err, result) {
-            if (err) reject({error: 'Cannot access to DB'});
+            if (err) reject({err});
             resolve(result);
         })
     })  
