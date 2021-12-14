@@ -12,7 +12,7 @@ exports.signup = async (req, res) => {
     const email = req.body.email;
     let password = req.body.password;
     const username = req.body.username;
-    
+    console.log(password)
     // Check user inputs validity
     if (email === '' || username === '' || password === '') {
         return res.status(400).json({error: 'Missing parameters'});
@@ -28,7 +28,6 @@ exports.signup = async (req, res) => {
         // Check if user infos (email or pseudo) already taken
         const isEmailExist = await User.findByEmail('email', email);
         const isPseudoTaken = await User.findByPseudo(username);
-
         if (isEmailExist.length > 0) {
             return res.status(401).json({error: 'Email already taken'});
         } else if (isPseudoTaken.length > 0) {
@@ -70,7 +69,7 @@ exports.login = async (req, res) => {
         const result = await User.findByEmail(email);
         // Check if user exists with email
         if (result.length === 0) {
-            return res.status(404).json({error: 'Wrong email'})
+            return res.status(400).json({error: 'Wrong email'})
         } else {
             // Compare passwords and generate data for authentification
             bcrypt.compare(password, result[0].password, (errBcrypt, resBcrypt) => {
@@ -125,7 +124,6 @@ exports.updateProfil = async (req, res) => {
     if (userId !== userIdConnected) {
         return res.status(401).json({error: 'Unauthorized request'})
     } 
-
     try {
         const user = await User.findById(userId);
         console.log(user)

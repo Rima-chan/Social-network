@@ -18,7 +18,7 @@ app.use('/api', publicationRoutes);
 app.use('/api', publicationLikesRoutes);
 app.use('/api/publications', commentRoutes);
 
-const port = process.env.DB_PORT || 3000;
+const port = process.env.DB_PORT || 8080;
 
 app.listen(port, () => {
     console.log(`Listening on port : ${port}`)

@@ -13,6 +13,8 @@ schema
     .is().not().oneOf(['mdp123']); // Blacklist these values
 
 module.exports = (req, res, next) => {
+    console.log('body')
+    console.log(req);
     if (!schema.validate(req.body.password)) {
         res.status(401).json({error: 'Mot de passe faible !'}); // More details ?
     } else {
