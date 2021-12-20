@@ -61,15 +61,15 @@ exports.login = async (req, res) => {
     const email = req.body.email;
     const password = req.body.password;
     // Check if user inputs are not empty
+    console.log(req.body)
     if (email === '' || password === '') {
         return res.status(400).json({error: 'Missing parameters'});
     }
-
     try {
         const result = await User.findByEmail(email);
         // Check if user exists with email
         if (result.length === 0) {
-            return res.status(400).json({error: 'Wrong email'})
+            return res.status(200).json({error: 'mail'});
         } else {
             // Compare passwords and generate data for authentification
             bcrypt.compare(password, result[0].password, (errBcrypt, resBcrypt) => {
@@ -96,12 +96,13 @@ exports.login = async (req, res) => {
                         xsrfToken,
                     })
                 } else {
-                    return res.status(403).json({error: 'Incorrrect password'});
+                    return res.status(200).json({error: 'password'});
                 }
             })
         }
     } catch (err) {
         console.log(err);
+        return res.status(500).json({error: 'Cannot check user'});
     }
 }
 

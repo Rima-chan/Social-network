@@ -21,7 +21,7 @@ User.create = (newUser) => {
 }
 
 User.findByEmail = (email) => {
-    let sql = `SELECT email FROM users WHERE email = ?`;
+    let sql = `SELECT email, password FROM users WHERE email = ?`;
     sql = mysql.format(sql, email);
     return new Promise((resolve, reject) => {
         db.query(sql, function(err, result) {

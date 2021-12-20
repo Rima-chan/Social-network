@@ -1,6 +1,6 @@
 import {BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Home from './pages/Home/HomePage';
-import Signup from "./pages/Home/SignupPage";
+import AllPosts from './pages/AllPosts/AllPostsPage';
 
 function App() {
   return (
@@ -9,8 +9,8 @@ function App() {
         <Route exact path="/">
           <Home />
         </Route>
-        <Route path="/inscription">
-          <Signup />
+        <Route path="/accueil">
+          <AllPosts />
         </Route>
       </Switch>
     </Router>
