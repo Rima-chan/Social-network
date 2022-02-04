@@ -1,9 +1,16 @@
 @tailwind base;
 @tailwind components;
-@tailwind utilities;
 
 @layer base {
-    body {
-        font-family: 'Montserrat', sans-serif;
-    }
+  body {
+    font-family: "Montserrat", sans-serif;
+  }
+  input:invalid[actived="true"] {
+    border: 1px solid #e44d4d;
+  }
+  input:invalid[actived="true"] ~ span {
+    display: block;
+  }
 }
+
+@tailwind utilities;

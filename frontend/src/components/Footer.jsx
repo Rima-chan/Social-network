@@ -1,4 +1,4 @@
-function Footer() {
+export default function Footer() {
     return(
         <footer className="py-5">
             <div className="flex flex-col items-center">
@@ -10,5 +10,3 @@ function Footer() {
         </footer>
     )
 }
-
-export default Footer;

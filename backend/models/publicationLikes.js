@@ -1,5 +1,5 @@
 const db = require('../config/db');
-const mysql = require('mysql');
+const mysql = require('mysql2');
 
 const Like = function(like) {
     this.userId = like.userId;
