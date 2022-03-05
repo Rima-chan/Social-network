@@ -66,10 +66,10 @@ export default function SignUpForm() {
   };
   const url = apiUrlGenerator("users/signup");
   const { onSubmit, isLoading, data, error } = useSubmitForm(url, values);
-  useEffect(() => {
-    console.log(data);
-    console.log(error);
-  }, [error, data]);
+  // useEffect(() => {
+  //   console.log(data);
+  //   console.log(error);
+  // }, [error, data]);
   return (
     <>
     <form onSubmit={onSubmit} className="pb-5">

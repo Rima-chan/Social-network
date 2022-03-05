@@ -11,8 +11,8 @@ const SALT_ROUNDS = 10;
 
 exports.signup = async (req, res) => {
   const email = req.body.email;
-  let password = req.body.password;
   const username = req.body.username;
+  let password = req.body.password;
   if (!email || !username || !password) {
     return res.status(400).json({ error: "Champs manquants" });
   }
@@ -22,12 +22,13 @@ exports.signup = async (req, res) => {
       .json({ error: "Le pseudo doit avoir entre 2 et 13 caractères" });
   }
   if (!EMAIL_REGEX.test(email)) {
-    return res.status(400).json({ error: "Email is not valid" });
+    return res.status(400).json({ error: "L'email n'est pas valide" });
   }
 
   try {
     const isEmailExist = await User.findByEmail("email", email);
     const isPseudoTaken = await User.findByPseudo(username);
+    console.log(isEmailExist);
     if (isEmailExist.length > 0) {
       return res.status(409).json({ error: "Email déjà utilisé" });
     } else if (isPseudoTaken.length > 0) {
@@ -56,7 +57,7 @@ exports.signup = async (req, res) => {
           .then((response) => {
             res.status(201).json(response);
           })
-          .catch((err) => res.status(400).json({ err }));
+          .catch((err) => res.status(400).json({ error: err }));
       });
     }
   } catch (err) {
