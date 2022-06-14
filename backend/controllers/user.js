@@ -28,13 +28,12 @@ exports.signup = async (req, res) => {
   try {
     const isEmailExist = await User.findByEmail("email", email);
     const isPseudoTaken = await User.findByPseudo(username);
-    console.log(isEmailExist);
+
     if (isEmailExist.length > 0) {
       return res.status(409).json({ error: "Email déjà utilisé" });
     } else if (isPseudoTaken.length > 0) {
       return res.status(409).json({ error: "Pseudo déjà pris 😕" });
     } else {
-      // create new user
       bcrypt.hash(password, SALT_ROUNDS, (err, hash) => {
         if (err) {
           return res
@@ -115,7 +114,7 @@ exports.login = async (req, res) => {
   }
 };
 
-exports.getOne = (req, res) => {
+exports.getOneUser = (req, res) => {
   const userId = parseInt(req.params.id, 10);
   if (isNaN(userId)) {
     return res.status(400).json({ error: "Invalid parameters" });
@@ -128,21 +127,18 @@ exports.getOne = (req, res) => {
 };
 
 exports.updateProfil = async (req, res) => {
-  // Check auth parameters
   const userId = parseInt(req.params.id, 10);
   const userIdConnected = parseInt(req.user[0].id, 10);
+
   if (userId !== userIdConnected) {
     return res.status(401).json({ error: "Unauthorized request" });
   }
   try {
     const user = await User.findById(userId);
-    console.log(user);
-    // Check if user exists
     if (user.length === 0) {
       return res.status(404).json({ error: "User doesn't exist in DB" });
     }
 
-    // Check if email is valid + Check if email and pseudo are not already taken
     if (req.body.email && !EMAIL_REGEX.test(req.body.email)) {
       return res.status(400).json({ error: "Email is not valid" });
     }
