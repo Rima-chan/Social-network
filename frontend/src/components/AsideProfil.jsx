@@ -12,7 +12,7 @@ import UserProfilLine from "./UserProfilLine";
 const AsideProfil = (props) => {
   const { username, avatar } = props;
   return (
-    <div className="justify-self-start grid grid-cols-1 grid-rows-3 gap-2 w-1/6 h-full bg-red-100 rounded-lg">
+    <div className="justify-self-start grid grid-cols-1 grid-rows-3 gap-2 w-1/6 h-full bg-red-100 rounded-l-lg">
       <div className="justify-center align-items-center flex flex-col">
         <img
           class="w-20 h-20 rounded-full self-center"
