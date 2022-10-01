@@ -1,8 +1,8 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import SignUpForm from "./SignUpForm";
 import LoginForm from "./LoginForm";
 
-export default function Log(props) {
+const Log = (props) => {
   const [signUp, setSignup] = useState(props.signup);
   const [login, setLogin] = useState(props.login);
   const handleLog = (e) => {
@@ -30,4 +30,6 @@ export default function Log(props) {
       </p>
     </div>
   );
-}
+};
+
+export default Log;

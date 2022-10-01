@@ -1,3 +1,3 @@
 export default function apiUrlGenerator(endpoint) {
-  return `http://localhost:8080/api/${endpoint}`;
+  return `http://localhost:8000/api/${endpoint}`;
 }

@@ -1,9 +1,6 @@
-const plugin = require("tailwindcss/plugin");
-
+/** @type {import('tailwindcss').Config} */
 module.exports = {
-  mod: "jit",
-  purge: ["./public/**/*.html", "./src/**/*.{js,jsx}"],
-  darkMode: false, // or 'media' or 'class'
+  content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {},
   },
@@ -14,21 +11,5 @@ module.exports = {
       display: ["responsive", "hover", "focus"],
     },
   },
-  plugins: [
-    // plugin(function ({ addVariant, e }) {
-    //   addVariant("invalid", ({ modifySelectors, separator }) => {
-    //     modifySelectors(({ className }) => {
-    //       return `.${e(`invalid${separator}${className}`)}: invalid`;
-    //     });
-    //   });
-    // }),
-    // ,
-    // plugin(function ({ addVariant, e }) {
-    //   addVariant("valid", ({ modifySelectors, separator }) => {
-    //     modifySelectors(({ className }) => {
-    //       return `.${e(`valid${separator}${className}`)}: valid`;
-    //     });
-    //   });
-    // }),
-  ],
+  plugins: [],
 };

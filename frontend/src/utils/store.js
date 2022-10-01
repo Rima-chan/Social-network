@@ -1,4 +1,5 @@
-import { combineReducers, createStore } from "redux";
+import { combineReducers } from "redux";
+import { configureStore } from "@reduxjs/toolkit";
 import throttle from "lodash/throttle";
 import {
   loadFromLocalStorage,
@@ -14,7 +15,11 @@ const persistedState = loadFromLocalStorage();
 
 const reduxDevtools =
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();
-const store = createStore(reducer, persistedState, reduxDevtools);
+const store = configureStore({
+  reducer,
+  preloadedState: persistedState,
+  devTool: reduxDevtools,
+});
 
 store.subscribe(
   throttle(() => {

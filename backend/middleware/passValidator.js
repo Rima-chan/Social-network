@@ -1,6 +1,6 @@
-const passwordValidator = require("password-validator");
+const PasswordValidator = require("password-validator");
 
-let schema = new passwordValidator();
+const schema = new PasswordValidator();
 
 // Add sth to avoid script characters ?
 schema

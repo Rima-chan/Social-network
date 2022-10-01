@@ -2,9 +2,6 @@
 @tailwind components;
 
 @layer base {
-  body {
-    font-family: "Montserrat", sans-serif;
-  }
   input:invalid[actived="true"] {
     border: 1px solid #e44d4d;
   }

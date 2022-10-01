@@ -1,18 +1,18 @@
 require("dotenv").config();
-const User = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const fs = require("fs");
+const User = require("../models/user");
 
 const EMAIL_REGEX =
-  /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  /^(([^<>()\\[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const SALT_ROUNDS = 10;
 
 exports.signup = async (req, res) => {
-  const email = req.body.email;
-  const username = req.body.username;
-  let password = req.body.password;
+  const { email } = req.body;
+  const { username } = req.body;
+  const { password } = req.body;
   if (!email || !username || !password) {
     return res.status(400).json({ error: "Champs manquants" });
   }
@@ -24,49 +24,47 @@ exports.signup = async (req, res) => {
   if (!EMAIL_REGEX.test(email)) {
     return res.status(400).json({ error: "L'email n'est pas valide" });
   }
-
   try {
-    const isEmailExist = await User.findByEmail("email", email);
+    const isEmailExist = await User.findByEmail(email);
+    console.log("isEmailExist", isEmailExist);
     const isPseudoTaken = await User.findByPseudo(username);
-
+    console.log(isPseudoTaken);
     if (isEmailExist.length > 0) {
-      return res.status(409).json({ error: "Email déjà utilisé" });
-    } else if (isPseudoTaken.length > 0) {
-      return res.status(409).json({ error: "Pseudo déjà pris 😕" });
-    } else {
-      bcrypt.hash(password, SALT_ROUNDS, (err, hash) => {
-        if (err) {
-          return res
-            .status(500)
-            .json({ error: "Cannot hash password :" + err });
-        }
-        const newUser = new User({
-          email: email,
-          password: hash,
-          username: username,
-          avatar: `${req.protocol}://${req.get("host")}/images/avatar_user.png`,
-        });
-        User.create([
-          newUser.email,
-          newUser.password,
-          newUser.username,
-          newUser.avatar,
-          newUser.isAdmin,
-        ])
-          .then((response) => {
-            res.status(201).json(response);
-          })
-          .catch((err) => res.status(400).json({ error: err }));
-      });
+      return res.status(409).json({ error: "Email déjà utilisé 😕" });
     }
+    if (isPseudoTaken.length > 0) {
+      return res.status(409).json({ error: "Pseudo déjà pris 😕" });
+    }
+    bcrypt.hash(password, SALT_ROUNDS, (err, hash) => {
+      if (err) {
+        return res.status(500).json({ error: `Cannot hash password :${err}` });
+      }
+      const newUser = new User({
+        email,
+        password: hash,
+        username,
+        avatar: `${req.protocol}://${req.get("host")}/images/avatar_user.png`,
+      });
+      User.create([
+        newUser.email,
+        newUser.password,
+        newUser.username,
+        newUser.avatar,
+        newUser.isAdmin,
+      ])
+        .then((response) => {
+          res.status(201).json(response);
+        })
+        .catch((error) => res.status(400).json({ error }));
+    });
   } catch (err) {
-    return res.status(500).json({ error: "Cannot add user in DB : " + err });
+    return res.status(500).json({ error: `Cannot add user in DB : ${err}` });
   }
 };
 
 exports.login = async (req, res) => {
-  const email = req.body.email;
-  const password = req.body.password;
+  const { email } = req.body;
+  const { password } = req.body;
   if (!email || !password) {
     return res.status(400).json({ error: "Missing parameters" });
   }
@@ -74,40 +72,38 @@ exports.login = async (req, res) => {
     const isUserExist = await User.findByEmail(email);
     if (isUserExist.length === 0) {
       return res.status(400).json({ error: "Email incorrect" });
-    } else {
-      bcrypt.compare(
-        password,
-        isUserExist[0].password,
-        (errBcrypt, resBcrypt) => {
-          if (resBcrypt) {
-            const xsrfToken = crypto.randomBytes(64).toString("hex");
-            const accessToken = jwt.sign(
-              {
-                userId: isUserExist[0].id,
-                isAdmin: isUserExist[0].isAdmin,
-                xsrfToken: xsrfToken,
-              },
-              process.env.RANDOM_TOKEN_KEY,
-              { expiresIn: "8h" }
-            );
-            res.cookie("access_token", accessToken, {
-              httpOnly: true,
-              maxAge: 300000000000,
-              // "Secure: true" with http for production
-            });
-            return res.status(200).json({
-              userId: isUserExist[0].id,
-              username: isUserExist[0].username,
-              isAdmin: isUserExist[0].isAdmin,
-              avatar: isUserExist[0].avatar,
-              xsrfToken,
-            });
-          } else {
-            return res.status(401).json({ error: "Mot de passe incorrect" });
-          }
-        }
-      );
     }
+    bcrypt.compare(
+      password,
+      isUserExist[0].password,
+      (errBcrypt, resBcrypt) => {
+        if (resBcrypt) {
+          const xsrfToken = crypto.randomBytes(64).toString("hex");
+          const accessToken = jwt.sign(
+            {
+              userId: isUserExist[0].id,
+              isAdmin: isUserExist[0].isAdmin,
+              xsrfToken,
+            },
+            process.env.RANDOM_TOKEN_KEY,
+            { expiresIn: "8h" }
+          );
+          res.cookie("access_token", accessToken, {
+            httpOnly: true,
+            maxAge: 300000000000,
+            // "Secure: true" with http for production
+          });
+          return res.status(200).json({
+            userId: isUserExist[0].id,
+            username: isUserExist[0].username,
+            isAdmin: isUserExist[0].isAdmin,
+            avatar: isUserExist[0].avatar,
+            xsrfToken,
+          });
+        }
+        return res.status(401).json({ error: "Mot de passe incorrect" });
+      }
+    );
   } catch (err) {
     console.log(err);
     return res.status(500).json({ error: "Cannot check user" });
@@ -116,14 +112,14 @@ exports.login = async (req, res) => {
 
 exports.getOneUser = (req, res) => {
   const userId = parseInt(req.params.id, 10);
-  if (isNaN(userId)) {
+  if (Number.isNaN(userId)) {
     return res.status(400).json({ error: "Invalid parameters" });
   }
   User.findById(userId)
     .then((user) => {
       res.status(200).json(user);
     })
-    .catch((err) => res.status(404).json({ error: "User not found " + err }));
+    .catch((err) => res.status(404).json({ error: `User not found ${err}` }));
 };
 
 exports.updateProfil = async (req, res) => {
@@ -172,7 +168,7 @@ exports.updateProfil = async (req, res) => {
         res.status(200).json({ message: "Profil successfully updated" });
       })
       .catch((err) => {
-        res.status(500).json({ error: "Cannot update user " + err });
+        res.status(500).json({ error: `Cannot update user ${err}` });
       });
   } catch (err) {
     console.log(err);
@@ -183,7 +179,7 @@ exports.deleteProfil = (req, res) => {
   // Check auth parameters
   const userId = parseInt(req.params.id, 10);
   const userIdConnected = parseInt(req.user[0].id, 10);
-  const isAdmin = req.user[0].isAdmin;
+  const { isAdmin } = req.user[0];
 
   if (userId === userIdConnected || isAdmin === 1) {
     User.deleteProfil(userId)
@@ -191,7 +187,7 @@ exports.deleteProfil = (req, res) => {
         res.status(200).json({ message: "User successfully deleted" })
       )
       .catch((err) => {
-        res.status(500).json({ error: "Cannot delete user " + err });
+        res.status(500).json({ error: `Cannot delete user ${err}` });
       });
   } else {
     res.status(403).json({ error: "Unauthorized request" });
@@ -203,7 +199,7 @@ exports.getAll = async (req, res) => {
     .then((users) => {
       res.status(200).json(users);
     })
-    .catch((err) => {
-      return res.status(404).json({ error: "Cannont find users " + err });
-    });
+    .catch((err) =>
+      res.status(404).json({ error: `Cannont find users ${err}` })
+    );
 };
