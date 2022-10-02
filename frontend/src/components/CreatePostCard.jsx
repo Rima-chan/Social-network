@@ -2,7 +2,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUser } from "../utils/redux/selectors";
-import { faImage, faTrash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faImage,
+  faTrash,
+  faPaperPlane,
+} from "@fortawesome/free-solid-svg-icons";
 import { createPost } from "../queries/post";
 
 const imageMimeType = /image\/(png|jpg|jpeg)/i;
@@ -15,7 +19,6 @@ const CreatePostCard = () => {
 
   const onChangeImage = (e) => {
     const file = e.target.files[0];
-    console.log("e", e);
     if (!file.type.match(imageMimeType)) {
       alert("Image mime type is not valid");
       return;
@@ -25,9 +28,13 @@ const CreatePostCard = () => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    createPost(content, file);
-    console.log("content", content);
-    console.log("file :>> ", file);
+    const data = new FormData();
+    data.append("imageUrl", file);
+    data.append("content", content);
+    createPost(data);
+    setFile(undefined);
+    setFileDataURL(null);
+    setContent("");
   };
 
   useEffect(() => {
@@ -54,9 +61,13 @@ const CreatePostCard = () => {
   return (
     <div className="flex flex-col border rounded-md p-2 w-3/4 shadow-md">
       <h2 className="py-2 border-b">Post something</h2>
-      <form className="flex items-center p-3" onSubmit={onSubmit}>
+      <form
+        className="flex items-center my-3 p-3  rounded-lg"
+        onSubmit={onSubmit}
+        encType="multipart/form-data"
+      >
         <img
-          class="w-10 h-10 rounded-full self-center"
+          className="w-10 h-10 rounded-full self-center"
           src={avatar}
           alt="Avatar"
         ></img>
@@ -64,33 +75,28 @@ const CreatePostCard = () => {
           <input
             type="text"
             value={content}
-            className="py-3 pl-3 mx-2 border-b w-full"
+            className="py-3 pl-3 mx-2 border-b w-full focus-within:outline-0"
             placeholder="What's in your mind ?"
             onChange={(e) => setContent(e.target.value)}
+            onBlur={() => setContent("")}
           />
         </span>
         <label htmlFor="file-upload" className="cursor-pointer p-2 ml-3">
-          <FontAwesomeIcon icon={faImage} size="xl" />
+          <FontAwesomeIcon icon={faImage} size="xl" color="#fed0d0" />
         </label>
         <input
           id="file-upload"
           type="file"
           accept="image/*"
+          name="imageUrl"
           onChange={onChangeImage}
         />
+        <button type="submit" onClick={onSubmit} className=" p-2">
+          <FontAwesomeIcon icon={faPaperPlane} color="#fed0d0" size="xl" />
+        </button>
       </form>
       {fileDataURL ? (
-        <span className="flex flex-col justify-center pb-5">
-          <span
-            className="self-end cursor-pointer"
-            onClick={() => {
-              console.log("c");
-              setFile(undefined);
-              setFileDataURL(null);
-            }}
-          >
-            <FontAwesomeIcon icon={faTrash} />
-          </span>
+        <span className="flex flex-col justify-center pb-2">
           {
             <img
               src={fileDataURL}
@@ -98,15 +104,17 @@ const CreatePostCard = () => {
               className="object-cover self-center max-w-xs"
             />
           }
+          <span
+            className="self-end cursor-pointer"
+            onClick={() => {
+              setFile(undefined);
+              setFileDataURL(null);
+            }}
+          >
+            <FontAwesomeIcon icon={faTrash} color="#b1b1b1" />
+          </span>
         </span>
       ) : null}
-      <button
-        type="submit"
-        onClick={onSubmit}
-        className="w-1/6 bg-green-700 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
-      >
-        Post
-      </button>
     </div>
   );
 };

@@ -6,7 +6,7 @@ exports.createNewPost = (req, res) => {
   const { content } = req.body;
   const attachment = req.file
     ? `${req.protocol}://${req.get("host")}/images/${req.file.filename}`
-    : null;
+    : undefined;
   const userId = req.user[0].id;
 
   if (!content && !attachment) {
@@ -30,8 +30,7 @@ exports.createNewPost = (req, res) => {
   ])
     .then((response) => res.status(201).json({ response }))
     .catch((err) => {
-      console.log(err);
-      res.status(400).json({ error: "Cannot create Post" });
+      res.status(400).json({ error: "Cannot create Post", err });
     });
 };
 
@@ -82,11 +81,9 @@ exports.updatePost = async (req, res) => {
 
     Post.update([content, attachment, postId])
       .then((response) => {
-        console.log(response);
-        res.status(200).json({ message: "post successfully updated" });
+        res.status(200).json({ data: response });
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
         res.status(500).json({ error: "Cannot update Post" });
       });
   } catch (err) {
@@ -115,8 +112,7 @@ exports.deletePost = async (req, res) => {
           }
           return res.status(200).json({ message: "Post successfully deleted" });
         })
-        .catch((err) => {
-          console.log(err);
+        .catch(() => {
           res.status(500).json({ error: "Cannot delete Post" });
         });
     } else {

@@ -11,7 +11,8 @@ const Post = function (post) {
 };
 
 Post.create = (newPost) => {
-  let sql = "INSERT INTO Posts VALUES(NULL, ?, ?, ?, ?, ?, NOW(), NOW())";
+  let sql =
+    "INSERT INTO Post (userId, content, attachment, comments, likes) VALUES(?, ?, ?, ?, ?)";
   sql = mysql.format(sql, newPost);
   return new Promise((resolve, reject) => {
     db.query(sql, (err) => {
@@ -22,7 +23,7 @@ Post.create = (newPost) => {
 };
 
 Post.findById = (postId) => {
-  let sql = "SELECT * FROM Posts WHERE id = ?";
+  let sql = "SELECT * FROM Post WHERE id = ?";
   sql = mysql.format(sql, postId);
   return new Promise((resolve, reject) => {
     db.query(sql, (err, result) => {

@@ -22,11 +22,9 @@ User.create = (newUser) => {
 };
 
 User.findByEmail = (email) => {
-  console.log("email", email);
   let sql =
     "SELECT id, username, isAdmin, avatar, email, password FROM User WHERE email = ?";
   sql = mysql.format(sql, email);
-  console.log(sql);
   return new Promise((resolve, reject) => {
     db.query(sql, (err, result) => {
       if (err) reject(err);

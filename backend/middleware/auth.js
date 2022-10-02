@@ -19,11 +19,8 @@ module.exports = async (req, res, next) => {
       return res.status(401).json({ error: "Bad XSRF token" });
     }
     const { userId } = decodedToken;
-    const user = await User.findById(
-      "id, email, username, avatar, isAdmin",
-      userId
-    );
-    if (!user) {
+    const user = await User.findById(userId);
+    if (user.length === 0) {
       return res.status(404).json({ error: "User not found" });
     }
     req.user = user;
