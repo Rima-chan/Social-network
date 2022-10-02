@@ -5,8 +5,8 @@ const User = require("../models/user");
 module.exports = async (req, res, next) => {
   try {
     const { headers } = req;
-    const { cookie } = req.headers;
-    const accessToken = cookie ? cookie.split("=")[1] : null;
+    const cookie = req.cookies;
+    const accessToken = cookie.access_token;
     if (!cookie || !accessToken) {
       return res.status(401).json({ error: "Missing token in cookie" });
     }

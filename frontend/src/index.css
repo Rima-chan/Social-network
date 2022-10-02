@@ -8,6 +8,9 @@
   input:invalid[actived="true"] ~ span {
     display: block;
   }
+  input[type="file"] {
+    display: none;
+  }
 }
 
 @tailwind utilities;

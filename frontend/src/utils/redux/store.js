@@ -4,14 +4,17 @@ import throttle from "lodash/throttle";
 import {
   loadFromLocalStorage,
   saveToLocalStorage,
-} from "./services/localStorage";
-import userLogReducer from "../features/userLogInfos";
+} from "../services/localStorage";
+import userLogReducer from "../../queries/userLogInfos";
 
 const reducer = combineReducers({
   user: userLogReducer,
 });
 
-const persistedState = loadFromLocalStorage();
+const persistedState = {
+  user: loadFromLocalStorage("user"),
+  xsrfToken: loadFromLocalStorage("xsrfToken"),
+};
 
 const reduxDevtools =
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__();

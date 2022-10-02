@@ -1,5 +1,5 @@
 import { produce } from "immer";
-import { selectUserLogState } from "../utils/selectors";
+import { selectUserLogState } from "../utils/redux/selectors";
 import apiUrlGenerator from "../utils/services/apiUrl";
 
 const FETCHING = "userLog/fetching";
@@ -40,6 +40,7 @@ export async function fetchUserLogInfos(store, formData) {
         Accept: "text/html",
         "Content-Type": "application/json",
       },
+      credentials: "include",
       body: JSON.stringify(formData),
     });
     const data = await response.json();
@@ -50,7 +51,6 @@ export async function fetchUserLogInfos(store, formData) {
 }
 
 export default function userLogReducer(state = initialState, action) {
-  // const { type, action } = payload;
   return produce(state, (draft) => {
     switch (action.type) {
       case FETCHING: {

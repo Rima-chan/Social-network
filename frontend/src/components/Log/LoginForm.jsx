@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useStore } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import FormInput from "../FormInput";
-import { fetchUserLogInfos } from "../../features/userLogInfos";
-import { selectUserLogState } from "../../utils/selectors";
+import { fetchUserLogInfos } from "../../queries/userLogInfos";
+import { selectUserLogState } from "../../utils/redux/selectors";
 import Alert from "../AlertMessage";
 
 const LoginForm = () => {
@@ -38,7 +38,7 @@ const LoginForm = () => {
     },
   ];
   const message = {
-    failContent: "Oups, il y a eu un problème... 😢",
+    failContent: "Oups, there is a problem... 😢",
     failClasses: "bg-red-600 border-red-600 text-red-600 justify-center",
   };
   const handleChange = (e) => {
@@ -54,7 +54,7 @@ const LoginForm = () => {
       userLogState.status === "resolved" && userLogState.data.error === null
     );
     if (userLogState.status === "resolved" && !userLogState.data.error) {
-      navigate("/accueil");
+      navigate("/home");
     }
   }, [userLogState, navigate]);
   return (

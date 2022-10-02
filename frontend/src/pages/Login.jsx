@@ -1,9 +1,9 @@
-import Header from "../../components/Header";
-import Footer from "../../components/Footer";
-import Log from "../../components/Log";
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import Log from "../components/Log";
 import React from "react";
 
-const Home = () => {
+const Login = () => {
   return (
     <div className="flex flex-col items-center h-screen">
       <Header />
@@ -15,4 +15,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Login;

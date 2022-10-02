@@ -26,9 +26,7 @@ exports.signup = async (req, res) => {
   }
   try {
     const isEmailExist = await User.findByEmail(email);
-    console.log("isEmailExist", isEmailExist);
     const isPseudoTaken = await User.findByPseudo(username);
-    console.log(isPseudoTaken);
     if (isEmailExist.length > 0) {
       return res.status(409).json({ error: "Email déjà utilisé 😕" });
     }
@@ -88,11 +86,13 @@ exports.login = async (req, res) => {
             process.env.RANDOM_TOKEN_KEY,
             { expiresIn: "8h" }
           );
+
           res.cookie("access_token", accessToken, {
             httpOnly: true,
             maxAge: 300000000000,
-            // "Secure: true" with http for production
+            // "Secure: true" with https for production
           });
+
           return res.status(200).json({
             userId: isUserExist[0].id,
             username: isUserExist[0].username,

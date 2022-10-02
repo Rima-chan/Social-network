@@ -5,20 +5,20 @@ import {
   Route,
   Routes,
 } from "react-router-dom";
-import AllPosts from "./pages/AllPosts/AllPostsPage";
-import Home from "./pages/Home/HomePage";
+import Home from "./pages/Home";
+import Login from "./pages/Login";
 import { isAuth } from "./utils/services/auth";
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route exact path="/" element={<Home />} />
+        <Route exact path="/" element={<Login />} />
         <Route
-          path="accueil/"
+          path="/home"
           element={
             <RequireAuth redirectTo={"/"}>
-              <AllPosts />
+              <Home />
             </RequireAuth>
           }
         />
