@@ -2,19 +2,19 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useStore } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import FormInput from "../FormInput";
-import { fetchUserLogInfos } from "../../queries/userLogInfos";
-import { selectUserLogState } from "../../utils/redux/selectors";
+import { fetchUser } from "../../queries/userLogInfos";
+import { selectUser } from "../../utils/redux/selectors";
 import Alert from "../AlertMessage";
 
 const LoginForm = () => {
   const store = useStore();
-  const userLogState = useSelector(selectUserLogState);
-  console.log(userLogState);
+  const userLogState = useSelector(selectUser);
   const navigate = useNavigate();
   const [values, setValues] = useState({
     email: "",
     password: "",
   });
+
   const inputs = [
     {
       id: "emailLogin",
@@ -41,31 +41,28 @@ const LoginForm = () => {
     failContent: "Oups, there is a problem... 😢",
     failClasses: "bg-red-600 border-red-600 text-red-600 justify-center",
   };
-  const handleChange = (e) => {
+
+  const onChange = (e) => {
     setValues((values) => ({ ...values, [e.target.name]: e.target.value }));
   };
-  const handleSubmit = (e) => {
+  const onSubmit = (e) => {
     e.preventDefault();
-    fetchUserLogInfos(store, values);
+    fetchUser(store, values);
   };
   useEffect(() => {
-    console.log("userLogState :>> ", userLogState);
-    console.log(
-      userLogState.status === "resolved" && userLogState.data.error === null
-    );
     if (userLogState.status === "resolved" && !userLogState.data.error) {
       navigate("/home");
     }
   }, [userLogState, navigate]);
   return (
     <>
-      <form onSubmit={handleSubmit} className="pb-5">
+      <form onSubmit={onSubmit} className="pb-5">
         {inputs.map((input) => (
           <FormInput
             key={input.id}
             {...input}
             value={values[input.name]}
-            onChange={handleChange}
+            onChange={onChange}
           />
         ))}
         <button

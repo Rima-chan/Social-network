@@ -1,14 +1,14 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { selectUserLogInfos } from "../utils/redux/selectors";
+import { selectUser } from "../utils/redux/selectors";
 import { faImage, faTrash } from "@fortawesome/free-solid-svg-icons";
 import { createPost } from "../queries/post";
 
 const imageMimeType = /image\/(png|jpg|jpeg)/i;
 
 const CreatePostCard = () => {
-  const { username, avatar, isAdmin } = useSelector(selectUserLogInfos);
+  const { avatar } = useSelector(selectUser);
   const [content, setContent] = useState("");
   const [file, setFile] = useState(undefined);
   const [fileDataURL, setFileDataURL] = useState(null);

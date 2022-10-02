@@ -1,6 +1,7 @@
 import { produce } from "immer";
-import { selectUserLogState } from "../utils/redux/selectors";
+import { selectUser } from "../utils/redux/selectors";
 import apiUrlGenerator from "../utils/services/apiUrl";
+import { saveToLocalStorage } from "../utils/services/localStorage";
 
 const FETCHING = "userLog/fetching";
 const RESOLVED = "userLog/resolved";
@@ -12,27 +13,27 @@ const initialState = {
   error: null,
 };
 
-const userLogFetching = () => ({
+const userFething = () => ({
   type: FETCHING,
 });
 
-const userLogResolved = (data) => ({
+const userResolved = (data) => ({
   type: RESOLVED,
   payload: { data },
 });
 
-const userLogRejected = (error) => ({
+const userRejected = (error) => ({
   type: REJECTED,
   payload: { error },
 });
 
-export async function fetchUserLogInfos(store, formData) {
-  const status = selectUserLogState(store.getState())?.status;
+export async function fetchUser(store, formData) {
+  const status = selectUser(store.getState())?.status;
   if (status === "pending" || status === "updating") {
     return;
   }
   const url = apiUrlGenerator("users/login");
-  store.dispatch(userLogFetching());
+  store.dispatch(userFething());
   try {
     const response = await fetch(url, {
       method: "POST",
@@ -44,13 +45,15 @@ export async function fetchUserLogInfos(store, formData) {
       body: JSON.stringify(formData),
     });
     const data = await response.json();
-    store.dispatch(userLogResolved(data));
+    saveToLocalStorage("xsrfToken", data.xsrfToken);
+    saveToLocalStorage("user", data.user);
+    store.dispatch(userResolved(data.user));
   } catch (e) {
-    store.dispatch(userLogRejected(e));
+    store.dispatch(userRejected(e));
   }
 }
 
-export default function userLogReducer(state = initialState, action) {
+export default function userReducer(state = initialState, action) {
   return produce(state, (draft) => {
     switch (action.type) {
       case FETCHING: {

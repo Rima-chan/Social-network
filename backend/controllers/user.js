@@ -94,10 +94,12 @@ exports.login = async (req, res) => {
           });
 
           return res.status(200).json({
-            userId: isUserExist[0].id,
-            username: isUserExist[0].username,
-            isAdmin: isUserExist[0].isAdmin,
-            avatar: isUserExist[0].avatar,
+            user: {
+              userId: isUserExist[0].id,
+              username: isUserExist[0].username,
+              isAdmin: isUserExist[0].isAdmin,
+              avatar: isUserExist[0].avatar,
+            },
             xsrfToken,
           });
         }

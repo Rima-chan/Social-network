@@ -1,13 +1,13 @@
 import { useSelector } from "react-redux";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
-import { selectUserLogInfos } from "../utils/redux/selectors";
+import { selectUser } from "../utils/redux/selectors";
 import React from "react";
 import AsideProfil from "../components/AsideProfil";
 import Posts from "../components/Posts";
 
 const Home = () => {
-  const { username, avatar, isAdmin } = useSelector(selectUserLogInfos);
+  const { username, avatar, isAdmin } = useSelector(selectUser);
   return (
     <>
       <div className="flex flex-col items-center h-screen bg-red-50">

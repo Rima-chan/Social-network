@@ -5,15 +5,14 @@ import {
   loadFromLocalStorage,
   saveToLocalStorage,
 } from "../services/localStorage";
-import userLogReducer from "../../queries/userLogInfos";
+import userReducer from "../../queries/userLogInfos";
 
 const reducer = combineReducers({
-  user: userLogReducer,
+  user: userReducer,
 });
 
 const persistedState = {
   user: loadFromLocalStorage("user"),
-  xsrfToken: loadFromLocalStorage("xsrfToken"),
 };
 
 const reduxDevtools =
